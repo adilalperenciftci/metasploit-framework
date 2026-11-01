@@ -3,6 +3,8 @@
 # Current source: https://github.com/rapid7/metasploit-framework
 ##
 
+require 'English'
+
 class MetasploitModule < Msf::Auxiliary
   include Msf::Exploit::Remote::LDAP
   include Msf::OptionalSession::LDAP
@@ -247,13 +249,13 @@ class MetasploitModule < Msf::Auxiliary
     yield
   ensure
     if added
-      original_error = $!
+      original_error = $ERROR_INFO
       begin
         delete_spn(object_dn, spn)
-      rescue ::StandardError => cleanup_error
+      rescue ::StandardError => e
         raise unless original_error
 
-        print_error("Couldn't remove temporary #{visible_value(spn)} on #{object_dn} (#{cleanup_error.class}: #{cleanup_error.message}); remove it manually.")
+        print_error("Couldn't remove temporary #{visible_value(spn)} on #{object_dn} (#{e.class}: #{e.message}); remove it manually.")
       end
     end
   end
